@@ -71,7 +71,7 @@ const AppNavigator = () => {
   if (initializingCopenhagenApp) {
     return (
       <View style={{
-        backgroundColor: '#151515',
+        backgroundColor: '#000000',
         alignItems: 'center',
         flex: 1,
         justifyContent: 'center',

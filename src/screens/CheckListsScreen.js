@@ -409,7 +409,8 @@ const CheckListsScreen = ({ setSelectedScreen, selectedScreen }) => {
                     }}>
                         <TouchableOpacity
                             onPress={() => {
-                                setModalVisible(false);
+                                // setModalVisible(false);
+                                setB(true);
                             }}
                             style={{
                                 borderRadius: dimensions.width * 0.5,

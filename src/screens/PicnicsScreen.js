@@ -508,10 +508,10 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                                                 color: 'white',
                                                 padding: dimensions.width * 0.021,
                                                 fontWeight: 600,
-                                                maxWidth: dimensions.width * 0.7, 
+                                                maxWidth: dimensions.width * 0.7,
                                             }}
-                                            numberOfLines={1} 
-                                            ellipsizeMode="tail" 
+                                            numberOfLines={1}
+                                            ellipsizeMode="tail"
                                         >
                                             {item.heading}
                                         </Text>
@@ -567,7 +567,18 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                 </ScrollView>
             ) : (
                 <View>
-
+                    <Text
+                        style={{
+                            fontFamily: fontSfProTextRegular,
+                            fontSize: dimensions.width * 0.05,
+                            marginTop: dimensions.height * 0.3,
+                            color: 'white',
+                            fontWeight: 700,
+                            paddingHorizontal: dimensions.width * 0.021,
+                        }}
+                    >
+                        Here no created picnics.
+                    </Text>
                 </View>
             )}
 
@@ -599,8 +610,8 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                     }}>
                         <TouchableOpacity
                             onPress={() => {
-                                setModalVisible(false);
-                                setSelectedPicnicPlace(null);
+                                // setModalVisible(false);
+                                // setSelectedPicnicPlace(null);
                             }}
                             style={{
                                 borderRadius: dimensions.width * 0.5,

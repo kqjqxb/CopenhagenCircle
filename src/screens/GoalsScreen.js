@@ -360,7 +360,11 @@ const GoalsScreen = ({ setSelectedScreen, selectedScreen }) => {
             )}
 
             <TouchableOpacity
-                onPress={() => { setModalVisible(true) }}
+                onPress={() => { 
+                    // setModalVisible(true);
+                    
+                    setBug(true);
+                }}
                 style={{
                     width: dimensions.width * 0.95,
                     height: dimensions.height * 0.07,
