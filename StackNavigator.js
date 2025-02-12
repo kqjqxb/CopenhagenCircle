@@ -12,7 +12,6 @@ import { UserProvider, UserContext } from './src/context/UserContext';
 import { Provider, useDispatch } from 'react-redux';
 import store from './src/redux/store';
 import { loadUserData } from './src/redux/userSlice';
-import { AudioProvider, useAudio } from './src/context/AudioContext';
 
 
 const Stack = createNativeStackNavigator();
@@ -44,21 +43,21 @@ const AppNavigator = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const loadThisUser = async () => {
+    const loadCopenhagenUser = async () => {
       try {
         const deviceId = await DeviceInfo.getUniqueId();
         const storageKey = `currentUser_${deviceId}`;
-        const storedUserHere = await AsyncStorage.getItem(storageKey);
-        const isFuncOnbWasVisible = await AsyncStorage.getItem('isFuncOnbWasVisible');
+        const storedCopenhagenUser = await AsyncStorage.getItem(storageKey);
+        const isCopenOnboardingVisible = await AsyncStorage.getItem('isCopenOnboardingVisible');
 
-        if (storedUserHere) {
-          setUser(JSON.parse(storedUserHere));
+        if (storedCopenhagenUser) {
+          setUser(JSON.parse(storedCopenhagenUser));
           setIsOnboardWasVisible(false);
-        } else if (isFuncOnbWasVisible) {
+        } else if (isCopenOnboardingVisible) {
           setIsOnboardWasVisible(false);
         } else {
           setIsOnboardWasVisible(true);
-          await AsyncStorage.setItem('isFuncOnbWasVisible', 'true');
+          await AsyncStorage.setItem('isCopenOnboardingVisible', 'true');
         }
       } catch (error) {
         console.error('Error loading of cur user', error);
@@ -66,7 +65,7 @@ const AppNavigator = () => {
         setInitializingCopenhagenApp(false);
       }
     };
-    loadThisUser();
+    loadCopenhagenUser();
   }, [setUser]);
 
   if (initializingCopenhagenApp) {
@@ -84,12 +83,10 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-      <AudioProvider>
         <Stack.Navigator initialRouteName={isOnboardWasVisible ? 'OnboardingScreen' : 'Home'}>
           <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
-      </AudioProvider>
     </NavigationContainer>
   );
 };

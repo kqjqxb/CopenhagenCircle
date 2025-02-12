@@ -78,7 +78,7 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
     };
 
 
-    const handleDateChange = (text) => {
+    const handlePicnicDateChange = (text) => {
         const cleaned = text.replace(/[^0-9]/g, '');
 
         let formatted = cleaned;
@@ -123,7 +123,7 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
     };
 
 
-    const renderRightActions = (item) => (
+    const renderRightPicnicActions = (item) => (
         <TouchableOpacity
             onPress={() => removePicnic(item)}
             style={{
@@ -197,26 +197,26 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
 
     return (
         <View style={{
-            width: dimensions.width,
+            position: 'relative',
+            position: 'relative',
             flex: 1,
-            alignItems: 'center',
+            width: dimensions.width,
             justifyContent: 'flex-start',
-            position: 'relative',
             width: '100%',
+            alignItems: 'center',
             zIndex: 1,
-            position: 'relative',
         }} >
             <View style={{
                 width: '100%',
                 borderRadius: dimensions.width * 0.05,
                 alignSelf: 'center',
-                alignItems: 'center',
+                backgroundColor: '#151515',
                 paddingHorizontal: dimensions.width * 0.05,
                 paddingVertical: dimensions.height * 0.01,
+                padding: dimensions.width * 0.01,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                padding: dimensions.width * 0.01,
-                backgroundColor: '#151515',
+                alignItems: 'center',
                 paddingTop: dimensions.height * 0.057,
             }}>
                 <Text style={{
@@ -397,14 +397,14 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                         }}
                         disabled={selectedPicnicPlace === null}
                         style={{
+                            position: 'absolute',
                             width: dimensions.width * 0.95,
+                            justifyContent: 'center',
                             height: dimensions.height * 0.07,
                             backgroundColor: '#0875E6',
                             borderRadius: dimensions.width * 0.037,
-                            position: 'absolute',
-                            bottom: '16%',
-                            justifyContent: 'center',
                             alignItems: 'center',
+                            bottom: '16%',
                             alignSelf: 'center',
                             opacity: selectedPicnicPlace === null ? 0.9 : 1,
                         }}
@@ -441,7 +441,7 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                                         swipeableRefs.current.delete(item.id);
                                     }
                                 }}
-                                renderRightActions={() => renderRightActions(item)}
+                                renderRightActions={() => renderRightPicnicActions(item)}
                                 onSwipeableOpen={() => handleSwipeableOpen(item.id)}
                                 onSwipeableClose={() => handleSwipeableClose(item.id)}
                             >
@@ -517,19 +517,6 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                                         </Text>
 
 
-                                        {/* <Text
-                                            style={{
-                                                fontFamily: fontSfProTextRegular,
-                                                fontSize: dimensions.width * 0.043,
-                                                color: 'white',
-                                                padding: dimensions.width * 0.021,
-                                                fontWeight: 600,
-                                            }}
-                                        >
-                                            •
-                                        </Text> */}
-
-
                                         <Text
                                             style={{
                                                 fontFamily: fontSfProTextRegular,
@@ -573,18 +560,6 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                                         {item.selectedPicnicPlace.address}
                                     </Text>
 
-                                    {/* <Text
-                                        style={{
-                                            fontFamily: fontSfProTextRegular,
-                                            fontSize: dimensions.width * 0.037,
-                                            color: '#999999',
-                                            opacity: 0.7,
-                                            fontWeight: 500,
-                                            paddingHorizontal: dimensions.width * 0.021,
-                                        }}
-                                    >
-                                        {item.date}
-                                    </Text> */}
                                 </View>
                             </Swipeable>
                         ))}
@@ -602,16 +577,16 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                 <SafeAreaView
                     style={{
                         alignSelf: 'center',
+                        height: dimensions.height,
                         alignItems: 'center',
-                        width: '100%',
                         paddingHorizontal: dimensions.width * 0.05,
+                        shadowOpacity: 0.25,
                         shadowColor: '#000',
                         shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.25,
-                        width: dimensions.width,
                         zIndex: 1000,
+                        width: '100%',
+                        width: dimensions.width,
                         backgroundColor: '#000000',
-                        height: dimensions.height,
                     }}
                 >
                     <View style={{
@@ -687,31 +662,31 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                             onChangeText={setHeading}
                             placeholderTextColor="#999999"
                             style={{
+                                fontSize: dimensions.width * 0.041,
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                paddingVertical: dimensions.width * 0.035,
                                 paddingHorizontal: dimensions.width * 0.04,
                                 backgroundColor: '#161616',
                                 borderRadius: dimensions.width * 0.03,
                                 width: '100%',
+                                marginTop: dimensions.height * 0.01,
                                 color: 'white',
                                 fontFamily: fontSfProTextRegular,
-                                fontSize: dimensions.width * 0.041,
+                                paddingVertical: dimensions.width * 0.035,
                                 fontWeight: 400,
                                 textAlign: 'left',
-                                marginTop: dimensions.height * 0.01,
                             }}
                         />
 
                         <Text style={{
                             fontFamily: fontSfProTextRegular,
+                            marginTop: dimensions.height * 0.025,
                             color: 'white',
-                            fontWeight: 400,
                             fontSize: dimensions.width * 0.04,
                             alignSelf: 'flex-start',
                             textAlign: 'center',
-                            marginTop: dimensions.height * 0.025,
+                            fontWeight: 400,
                         }}
                         >
                             Date
@@ -720,35 +695,35 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                         <TextInput
                             placeholder="DD.MM.YYYY"
                             value={date}
-                            onChangeText={handleDateChange}
+                            onChangeText={handlePicnicDateChange}
                             placeholderTextColor="#999999"
                             style={{
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
-                                alignItems: 'center',
+                                marginTop: dimensions.height * 0.01,
                                 paddingVertical: dimensions.width * 0.035,
                                 paddingHorizontal: dimensions.width * 0.04,
                                 backgroundColor: '#161616',
                                 borderRadius: dimensions.width * 0.03,
                                 width: '100%',
+                                alignItems: 'center',
                                 color: 'white',
                                 fontFamily: fontSfProTextRegular,
-                                fontSize: dimensions.width * 0.041,
                                 fontWeight: 400,
                                 textAlign: 'left',
-                                marginTop: dimensions.height * 0.01,
+                                fontSize: dimensions.width * 0.041,
                             }}
                         />
 
 
                         <Text style={{
                             fontFamily: fontSfProTextRegular,
+                            marginTop: dimensions.height * 0.025,
                             color: 'white',
                             fontWeight: 400,
                             fontSize: dimensions.width * 0.04,
                             alignSelf: 'flex-start',
                             textAlign: 'center',
-                            marginTop: dimensions.height * 0.025,
                         }}
                         >
                             Location
@@ -770,11 +745,11 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                                 source={selectedPicnicPlace?.image}
                                 style={{
                                     width: dimensions.width * 0.97,
+                                    position: 'relative',
                                     height: dimensions.height * 0.23,
                                     alignSelf: 'center',
                                     textAlign: 'center',
                                     borderRadius: dimensions.width * 0.055,
-                                    position: 'relative',
                                 }}
                                 resizeMode="stretch"
                             />
@@ -792,12 +767,12 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                             </Text>
                             <Text
                                 style={{
-                                    fontFamily: fontSfProTextRegular,
                                     fontSize: dimensions.width * 0.037,
+                                    paddingHorizontal: dimensions.width * 0.021,
                                     color: '#999999',
                                     opacity: 0.7,
                                     fontWeight: 500,
-                                    paddingHorizontal: dimensions.width * 0.021,
+                                    fontFamily: fontSfProTextRegular,
                                 }}
                             >
                                 {selectedPicnicPlace?.address}
@@ -809,15 +784,15 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                         disabled={heading === '' || date === ''}
                         onPress={savePicnic}
                         style={{
-                            width: dimensions.width * 0.93,
+                            alignItems: 'center',
                             height: dimensions.height * 0.07,
                             backgroundColor: '#0875E6',
                             borderRadius: dimensions.width * 0.037,
                             position: 'absolute',
                             bottom: '7%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
                             alignSelf: 'center',
+                            justifyContent: 'center',
+                            width: dimensions.width * 0.93,
                             opacity: heading === '' || date === '' ? 0.5 : 1,
                         }}
                     >

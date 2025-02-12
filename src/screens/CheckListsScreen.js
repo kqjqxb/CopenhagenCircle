@@ -46,8 +46,8 @@ const CheckListsScreen = ({ setSelectedScreen, selectedScreen }) => {
 
     const removeChecklist = async (checklistToRemove) => {
         try {
-            const updatedChecklists = checklists.filter(fav =>
-                !(fav.heading === checklistToRemove.heading && fav.description === checklistToRemove.description && fav.id === checklistToRemove.id)
+            const updatedChecklists = checklists.filter(list =>
+                !(list.heading === checklistToRemove.heading && list.description === checklistToRemove.description && list.id === checklistToRemove.id)
             );
             await AsyncStorage.setItem('checklists', JSON.stringify(updatedChecklists));
             setChecklists(updatedChecklists);
@@ -100,7 +100,7 @@ const CheckListsScreen = ({ setSelectedScreen, selectedScreen }) => {
     }, [checklists, selectedScreen]);
 
 
-    const renderRightActions = (item) => (
+    const renderRightCheckListActions = (item) => (
         <TouchableOpacity
             onPress={() => removeChecklist(item)}
             style={{
@@ -235,7 +235,7 @@ const CheckListsScreen = ({ setSelectedScreen, selectedScreen }) => {
                                         swipeableRefs.current.delete(list.id);
                                     }
                                 }}
-                                renderRightActions={() => renderRightActions(list)}
+                                renderRightActions={() => renderRightCheckListActions(list)}
                                 onSwipeableOpen={() => handleSwipeableOpen(list.id)}
                                 onSwipeableClose={() => handleSwipeableClose(list.id)}
                             >

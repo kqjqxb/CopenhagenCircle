@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Animated, Text, Image, Dimensions, PanResponder, ImageBackground, Easing } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ArrowRightIcon } from 'react-native-heroicons/solid';
-
-const fontSfProTextRegular = 'SFProText-Regular';
 
 const OnboardingScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
@@ -15,7 +12,7 @@ const OnboardingScreen = () => {
       Animated.timing(rotateValue, {
         toValue: 1,
         duration: 500,
-        easing: Easing.linear, // Ensure linear easing for smooth rotation
+        easing: Easing.linear, 
         useNativeDriver: true,
       })
     ).start();

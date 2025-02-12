@@ -11,9 +11,7 @@ import {
 
 
 
-import HoroscopeDetailsScreen from './HoroscopeDetailsScreen';
 import SettingsScreen from './SettingsScreen';
-import StarDetailsScreen from './StarDetailsScreen';
 import EventDetailsScreen from './EventDetailsScreen';
 import CalendarScreen from './CalendarScreen';
 import PicnicsScreen from './PicnicsScreen';
@@ -44,9 +42,6 @@ const HomeScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [selectedScreen, setSelectedScreen] = useState('Home');
 
-  const [selectedStar, setSelectedStar] = useState(null);
-  const [storageImage, setStorageImage] = useState(null);
-  const [selectedZodiac, setSelectedZodiac] = useState(null);
   const [isNotificationEnabled, setNotificationEnabled] = useState(false);
   const [favorites, setFavorites] = useState([]);
   const [selectedEventCategory, setSelectedEventCategory] = useState('Markets');
@@ -59,7 +54,7 @@ const HomeScreen = () => {
         const saved = await AsyncStorage.getItem('favorites');
         setFavorites(saved ? JSON.parse(saved) : []);
       } catch (error) {
-        console.error('Помилка  favorites:', error);
+        console.error('Error  favorites:', error);
       }
     };
 
@@ -67,7 +62,7 @@ const HomeScreen = () => {
 
   }, [selectedScreen,]);
 
-  
+
 
   const saveFavourite = async (favourite) => {
     try {
@@ -107,7 +102,7 @@ const HomeScreen = () => {
 
       if (notificationValue !== null) setNotificationEnabled(JSON.parse(notificationValue));
     } catch (error) {
-      console.error("Error loading settings:", error);
+      console.error("Error loading notification settings:", error);
     }
   };
 
@@ -162,25 +157,25 @@ const HomeScreen = () => {
         }}>
           <View style={{
             width: '100%',
-            borderRadius: dimensions.width * 0.05,
             alignSelf: 'center',
-            alignItems: 'center',
+            paddingTop: dimensions.height * 0.057,
             paddingHorizontal: dimensions.width * 0.05,
             paddingVertical: dimensions.height * 0.01,
             flexDirection: 'row',
             justifyContent: 'space-between',
             padding: dimensions.width * 0.01,
+            alignItems: 'center',
             backgroundColor: '#151515',
-            paddingTop: dimensions.height * 0.057,
+            borderRadius: dimensions.width * 0.05,
           }}>
             <Text style={{
+              textAlign: 'center',
               fontFamily: fontSfProTextRegular,
-              color: 'white',
               fontWeight: 700,
               fontSize: dimensions.width * 0.064,
               alignItems: 'center',
               alignSelf: 'center',
-              textAlign: 'center',
+              color: 'white',
             }}
             >
               Copenhagen events
@@ -191,11 +186,11 @@ const HomeScreen = () => {
               <Image
                 source={require('../assets/icons/calendarIcon.png')}
                 style={{
-                  width: dimensions.height * 0.03,
+                  textAlign: 'center',
                   height: dimensions.height * 0.03,
                   margin: dimensions.height * 0.014,
-                  textAlign: 'center',
                   alignSelf: 'center',
+                  width: dimensions.height * 0.03,
                 }}
                 resizeMode="contain"
               />
@@ -260,7 +255,7 @@ const HomeScreen = () => {
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
-                    setSelectedEvent(item); 
+                    setSelectedEvent(item);
                     setSelectedScreen('EventDetails')
                   }}
                   style={{
@@ -385,84 +380,76 @@ const HomeScreen = () => {
         <SettingsScreen setSelectedScreen={setSelectedScreen} isNotificationEnabled={isNotificationEnabled} setNotificationEnabled={setNotificationEnabled} allData={allData}
           favorites={favorites} setFavorites={setFavorites}
         />
-      ) : selectedScreen === 'Map' ? (
-        <MapScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedStar={selectedStar} setSelectedStar={setSelectedStar} />
-      ) : selectedScreen === 'StarDetails' ? (
-        <StarDetailsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedStar={selectedStar} setSelectedStar={setSelectedStar} />
-      ) : selectedScreen === 'HoroscopeDetails' ? (
-        <HoroscopeDetailsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedZodiac={selectedZodiac} setSelectedZodiac={setSelectedZodiac} />
       ) : selectedScreen === 'EventDetails' ? (
         <EventDetailsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} favorites={favorites} setFavorites={setFavorites}
           selectedEvent={selectedEvent} setSelectedEvent={setSelectedEvent}
         />
       ) : selectedScreen === 'Calendar' ? (
-        <CalendarScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedZodiac={selectedZodiac} setSelectedZodiac={setSelectedZodiac} />
+        <CalendarScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'Picnics' ? (
-        <PicnicsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedZodiac={selectedZodiac} setSelectedZodiac={setSelectedZodiac} />
+        <PicnicsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'Checklists' ? (
-        <CheckListsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedZodiac={selectedZodiac} setSelectedZodiac={setSelectedZodiac} />
+        <CheckListsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'Goals' ? (
-        <GoalsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedZodiac={selectedZodiac} setSelectedZodiac={setSelectedZodiac} />
+        <GoalsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : null}
 
-      {selectedScreen !== 'StarDetails' && selectedScreen !== 'HoroscopeDetails' && (
 
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            paddingBottom: dimensions.height * 0.03,
-            paddingTop: dimensions.height * 0.019,
-            paddingHorizontal: dimensions.width * 0.03,
-            backgroundColor: '#151515',
-            width: dimensions.width,
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          paddingBottom: dimensions.height * 0.03,
+          paddingTop: dimensions.height * 0.019,
+          paddingHorizontal: dimensions.width * 0.03,
+          backgroundColor: '#151515',
+          width: dimensions.width,
 
 
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            alignSelf: 'center',
-            paddingVertical: dimensions.height * 0.004,
-            zIndex: 5000
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          alignSelf: 'center',
+          paddingVertical: dimensions.height * 0.004,
+          zIndex: 5000
 
-          }}
-        >
-          {homePagesButtons.map((button, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => setSelectedScreen(button.screen)}
+        }}
+      >
+        {homePagesButtons.map((button, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => setSelectedScreen(button.screen)}
+            style={{
+              borderRadius: dimensions.width * 0.5,
+              padding: dimensions.height * 0.019,
+              alignItems: 'center',
+              marginHorizontal: dimensions.width * 0.001,
+
+            }}
+          >
+            <Image
+              source={selectedScreen === button.screen ? button.selectedIconImage : button.iconImage}
               style={{
-                borderRadius: dimensions.width * 0.5,
-                padding: dimensions.height * 0.019,
-                alignItems: 'center',
-                marginHorizontal: dimensions.width * 0.001,
-
+                width: dimensions.height * 0.03,
+                height: dimensions.height * 0.03,
+                textAlign: 'center'
+              }}
+              resizeMode="contain"
+            />
+            <Text
+              style={{
+                fontFamily: fontSfProTextRegular,
+                fontSize: dimensions.width * 0.028,
+                color: selectedScreen === button.screen ? '#0875E6' : '#999999',
+                marginTop: dimensions.height * 0.008,
+                fontWeight: 600
               }}
             >
-              <Image
-                source={selectedScreen === button.screen ? button.selectedIconImage : button.iconImage}
-                style={{
-                  width: dimensions.height * 0.03,
-                  height: dimensions.height * 0.03,
-                  textAlign: 'center'
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={{
-                  fontFamily: fontSfProTextRegular,
-                  fontSize: dimensions.width * 0.028,
-                  color: selectedScreen === button.screen ? '#0875E6' : '#999999',
-                  marginTop: dimensions.height * 0.008,
-                  fontWeight: 600
-                }}
-              >
-                {button.screen}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
+              {button.screen}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };

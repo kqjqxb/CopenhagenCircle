@@ -38,7 +38,7 @@ const privacyAndTermsButtons = [
 
 ]
 
-const SettingsScreen = ({ setThisSelectedScreen, selectedScreen, isNotificationEnabled, setNotificationEnabled, allData, favorites, setFavorites }) => {
+const SettingsScreen = ({ selectedScreen, isNotificationEnabled, setNotificationEnabled, favorites, setFavorites }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -75,12 +75,7 @@ const SettingsScreen = ({ setThisSelectedScreen, selectedScreen, isNotificationE
 
     const loadSettings = async () => {
         try {
-            const soundValue = await AsyncStorage.getItem('isSoundEnabled');
-            const vibrationValue = await AsyncStorage.getItem('isVibrationEnabled');
             const notificationValue = await AsyncStorage.getItem('isNotificationEnabled');
-
-            if (soundValue !== null) setSoundEnabled(JSON.parse(soundValue));
-            if (vibrationValue !== null) setVibrationEnabled(JSON.parse(vibrationValue));
             if (notificationValue !== null) setNotificationEnabled(JSON.parse(notificationValue));
         } catch (error) {
             console.error("Error loading settings:", error);
@@ -90,11 +85,6 @@ const SettingsScreen = ({ setThisSelectedScreen, selectedScreen, isNotificationE
     useEffect(() => {
         loadSettings();
     }, [isNotificationEnabled, selectedScreen]);
-
-
-    useEffect(() => {
-        console.log('favorites:', favorites);
-    }, [favorites, modalVisible])
 
     return (
         <View style={{
@@ -108,26 +98,26 @@ const SettingsScreen = ({ setThisSelectedScreen, selectedScreen, isNotificationE
         }} >
             <View style={{
                 width: '100%',
+                backgroundColor: '#151515',
                 borderRadius: dimensions.width * 0.05,
-                alignSelf: 'center',
                 alignItems: 'center',
                 paddingHorizontal: dimensions.width * 0.05,
                 paddingVertical: dimensions.height * 0.01,
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                alignSelf: 'center',
                 padding: dimensions.width * 0.01,
-                backgroundColor: '#151515',
                 paddingTop: dimensions.height * 0.057,
+                justifyContent: 'space-between',
             }}>
                 <Text style={{
                     fontFamily: fontSfProTextRegular,
                     color: 'white',
-                    fontWeight: 700,
-                    fontSize: dimensions.width * 0.064,
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    textAlign: 'center',
                     marginLeft: dimensions.width * 0.3,
+                    fontWeight: 700,
+                    alignSelf: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    fontSize: dimensions.width * 0.064,
                 }}
                 >
                     Settings
@@ -144,10 +134,10 @@ const SettingsScreen = ({ setThisSelectedScreen, selectedScreen, isNotificationE
                         source={require('../assets/icons/calendarIcon.png')}
                         style={{
                             width: dimensions.height * 0.03,
-                            height: dimensions.height * 0.03,
-                            margin: dimensions.height * 0.014,
                             textAlign: 'center',
+                            height: dimensions.height * 0.03,
                             alignSelf: 'center',
+                            margin: dimensions.height * 0.014,
                         }}
                         resizeMode="contain"
                     />
@@ -167,15 +157,15 @@ const SettingsScreen = ({ setThisSelectedScreen, selectedScreen, isNotificationE
                         }}
                         style={{
                             backgroundColor: '#151515',
+                            alignItems: 'center',
                             borderRadius: dimensions.width * 0.05,
-                            paddingVertical: dimensions.height * 0.028,
                             marginTop: dimensions.height * 0.008,
                             alignSelf: 'center',
                             width: '95%',
                             flexDirection: 'row',
                             justifyContent: 'flex-start',
+                            paddingVertical: dimensions.height * 0.028,
                             paddingHorizontal: dimensions.width * 0.05,
-                            alignItems: 'center',
                         }}
                     >
                         <Image
@@ -203,14 +193,14 @@ const SettingsScreen = ({ setThisSelectedScreen, selectedScreen, isNotificationE
                     }}
                     style={{
                         backgroundColor: '#151515',
+                        width: '95%',
                         borderRadius: dimensions.width * 0.05,
-                        paddingVertical: dimensions.height * 0.028,
                         marginTop: dimensions.height * 0.008,
                         alignSelf: 'center',
-                        width: '95%',
                         flexDirection: 'row',
                         justifyContent: 'flex-start',
                         paddingHorizontal: dimensions.width * 0.05,
+                        paddingVertical: dimensions.height * 0.028,
                         alignItems: 'center',
                     }}
                 >
@@ -237,15 +227,15 @@ const SettingsScreen = ({ setThisSelectedScreen, selectedScreen, isNotificationE
                     }}
                     style={{
                         backgroundColor: '#151515',
+                        flexDirection: 'row',
                         borderRadius: dimensions.width * 0.05,
-                        paddingVertical: dimensions.height * 0.028,
                         marginTop: dimensions.height * 0.008,
                         alignSelf: 'center',
                         width: '95%',
-                        flexDirection: 'row',
+                        paddingVertical: dimensions.height * 0.028,
                         justifyContent: 'space-between',
-                        paddingHorizontal: dimensions.width * 0.05,
                         alignItems: 'center',
+                        paddingHorizontal: dimensions.width * 0.05,
                     }}
                 >
                     <View style={{
@@ -288,15 +278,15 @@ const SettingsScreen = ({ setThisSelectedScreen, selectedScreen, isNotificationE
                     style={{
                         alignSelf: 'center',
                         alignItems: 'center',
+                        height: dimensions.height,
                         width: '100%',
                         paddingHorizontal: dimensions.width * 0.05,
                         shadowColor: '#000',
                         shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.25,
                         width: dimensions.width,
-                        zIndex: 1000,
                         backgroundColor: '#000000',
-                        height: dimensions.height,
+                        zIndex: 1000,
+                        shadowOpacity: 0.25,
                     }}
                 >
                     <View style={{
@@ -386,7 +376,6 @@ const SettingsScreen = ({ setThisSelectedScreen, selectedScreen, isNotificationE
                                             <TouchableOpacity
                                                 key={item.id}
                                                 onPress={() => {
-                                                    // setSelectedEvent(item); 
 
                                                 }}
                                                 style={{

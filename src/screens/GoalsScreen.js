@@ -84,10 +84,10 @@ const GoalsScreen = ({ setSelectedScreen, selectedScreen }) => {
             onPress={() => removeGoal(item)}
             style={{
                 backgroundColor: 'transparent',
+                height: '100%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: dimensions.width * 0.15,
-                height: '100%',
+                width: dimensions.width * 0.16,
             }}
         >
             <Image
@@ -143,7 +143,6 @@ const GoalsScreen = ({ setSelectedScreen, selectedScreen }) => {
             return g;
         });
 
-        // Перемістити виконані цілі вниз
         const sortedGoals = updatedGoals.sort((a, b) => a.status === 'complete' ? 1 : -1);
 
         setGoals(sortedGoals);

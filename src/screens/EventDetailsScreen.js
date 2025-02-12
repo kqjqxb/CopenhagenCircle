@@ -126,21 +126,6 @@ const EventDetailsScreen = ({  setSelectedScreen, selectedScreen, selectedPlace,
                 </Text>
 
 
-                {/* <TouchableOpacity onPress={() => saveFavourite(selectedPlace)} style={{ zIndex: 1000, }}>
-
-                    <Image
-                        source={require('../assets/icons/blueHeartIcon.png')}
-                        style={{
-                            width: dimensions.height * 0.046,
-                            height: dimensions.height * 0.046,
-                            textAlign: 'center',
-                            marginRight: dimensions.width * 0.02,
-                        }}
-                        resizeMode="contain"
-                    />
-                </TouchableOpacity> */}
-
-
                 <TouchableOpacity onPress={() => saveFavourite(selectedEvent)} style={{ zIndex: 1000, }}>
 
                     <Image
@@ -156,17 +141,6 @@ const EventDetailsScreen = ({  setSelectedScreen, selectedScreen, selectedPlace,
                         }}
                         resizeMode="contain"
                     />
-                    {/* <Image
-                        source={require('../assets/icons/blueHeartIcon.png')}
-                        style={{
-                            width: dimensions.height * 0.064,
-                            height: dimensions.width * 0.064,
-                            marginTop: dimensions.height * 0.01,
-                            textAlign: 'center',
-                            alignItems: 'center',
-                        }}
-                        resizeMode="contain"
-                    />*/}
                 </TouchableOpacity> 
             </View>
 
@@ -187,12 +161,12 @@ const EventDetailsScreen = ({  setSelectedScreen, selectedScreen, selectedPlace,
                 />
 
                 <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    width: '100%',
-                    marginTop: dimensions.height * 0.01,
                     paddingHorizontal: dimensions.width * 0.02,
+                    flexDirection: 'row',
+                    marginTop: dimensions.height * 0.01,
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
                 }}>
                     <Text
                         style={{
@@ -210,10 +184,10 @@ const EventDetailsScreen = ({  setSelectedScreen, selectedScreen, selectedPlace,
                     <Text
                         style={{
                             fontFamily: 'SFPro-Medium',
+                            fontWeight: 500,
                             fontSize: dimensions.width * 0.037,
                             color: '#999999',
                             opacity: 0.7,
-                            fontWeight: 500
                         }}
                     >
                         {selectedEvent.time}
@@ -222,11 +196,11 @@ const EventDetailsScreen = ({  setSelectedScreen, selectedScreen, selectedPlace,
                 </View>
                 <Text
                     style={{
+                        fontWeight: 600,
                         fontFamily: fontSfProTextRegular,
                         fontSize: dimensions.width * 0.055,
                         color: 'white',
                         padding: dimensions.width * 0.021,
-                        fontWeight: 600,
                         marginTop: dimensions.height * 0.01,
                     }}
                 >
@@ -237,10 +211,10 @@ const EventDetailsScreen = ({  setSelectedScreen, selectedScreen, selectedPlace,
                 <Text
                     style={{
                         fontFamily: fontSfProTextRegular,
+                        fontWeight: 400,
                         fontSize: dimensions.width * 0.04,
                         color: 'white',
                         padding: dimensions.width * 0.021,
-                        fontWeight: 400,
                     }}
                 >
                     {selectedEvent.description}
