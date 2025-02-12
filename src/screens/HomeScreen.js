@@ -11,17 +11,19 @@ import {
 
 
 
-
-
-import FavouritesScreen from './FavouritesScreen';
 import HoroscopeDetailsScreen from './HoroscopeDetailsScreen';
-import ProfileScreen from './ProfileScreen';
+import SettingsScreen from './SettingsScreen';
 import StarDetailsScreen from './StarDetailsScreen';
 import EventDetailsScreen from './EventDetailsScreen';
 import CalendarScreen from './CalendarScreen';
 import PicnicsScreen from './PicnicsScreen';
 import CheckListsScreen from './CheckListsScreen';
 import GoalsScreen from './GoalsScreen';
+
+import marketsData from '../components/marketsData';
+import festivalsData from '../components/festivalsData';
+import bikeRidesData from '../components/bikeRidesData';
+import cleaningData from '../components/cleaningData';
 
 
 const homePagesButtons = [
@@ -32,7 +34,7 @@ const homePagesButtons = [
   { screen: 'Settings', iconImage: require('../assets/icons/buttons/settingsIcon.png'), selectedIconImage: require('../assets/icons/selectedBut/selectedSettings.png') },
 ];
 
-
+const allData = [...marketsData, ...festivalsData, ...bikeRidesData, ...cleaningData];
 
 
 const fontSfProTextRegular = 'SFProText-Regular';
@@ -45,35 +47,106 @@ const HomeScreen = () => {
   const [selectedStar, setSelectedStar] = useState(null);
   const [storageImage, setStorageImage] = useState(null);
   const [selectedZodiac, setSelectedZodiac] = useState(null);
-
-
-
-  const [selectedEvent, setSelectedEvent] = useState('Markets');
+  const [isNotificationEnabled, setNotificationEnabled] = useState(false);
+  const [favorites, setFavorites] = useState([]);
+  const [selectedEventCategory, setSelectedEventCategory] = useState('Markets');
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    const fetchStorageFavourites = async () => {
+      try {
+        const saved = await AsyncStorage.getItem('favorites');
+        setFavorites(saved ? JSON.parse(saved) : []);
+      } catch (error) {
+        console.error('Помилка  favorites:', error);
+      }
+    };
+
+    fetchStorageFavourites();
+
+  }, [selectedScreen,]);
+
+  
+
+  const saveFavourite = async (favourite) => {
+    try {
+      const savedFav = await AsyncStorage.getItem('favorites');
+      const parsedFav = savedFav ? JSON.parse(savedFav) : [];
+
+      const favIndex = parsedFav.findIndex((fav) => fav.id === favourite.id);
+
+      if (favIndex === -1) {
+        const updatedFavs = [favourite, ...parsedFav];
+        await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavs));
+        setFavorites(updatedFavs);
+        console.log('favourite збережена');
+      } else {
+        const updatedFavs = parsedFav.filter((fav) => fav.id !== favourite.id);
+        await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavs));
+        setFavorites(updatedFavs);
+        console.log('favourite видалена');
+      }
+    } catch (error) {
+      console.error('Помилка збереження/видалення локації:', error);
+    }
+  };
+
+  const isThisFavourite = (favourite) => {
+    return favorites.some((fav) => fav.id === favourite.id);
+  };
+
+  useEffect(() => {
+    console.log('allData:', allData);
+  }, [])
+
+
+  const loadSettings = async () => {
+    try {
+      const notificationValue = await AsyncStorage.getItem('isNotificationEnabled');
+
+      if (notificationValue !== null) setNotificationEnabled(JSON.parse(notificationValue));
+    } catch (error) {
+      console.error("Error loading settings:", error);
+    }
+  };
+
+
+  const getDataByCategory = (category) => {
+    switch (category) {
+      case 'Markets':
+        return marketsData;
+      case 'Festivals':
+        return festivalsData;
+      case 'Bike Rides':
+        return bikeRidesData;
+      case 'Cleaning':
+        return cleaningData;
+      default:
+        return [];
+    }
+  };
+
+  const data = getDataByCategory(selectedEventCategory);
+
+
+  useEffect(() => {
+    console.log('favorites:', favorites);
+  }, [favorites]);
+
+  useEffect(() => {
+    loadSettings();
+  }, [isNotificationEnabled, selectedScreen]);
 
   useEffect(() => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: false });
     }
-  }, [selectedEvent]);
+  }, [selectedEventCategory]);
 
 
-  useEffect(() => {
-    const loadUserProfile = async () => {
-      try {
-        const userProfile = await AsyncStorage.getItem('UserProfile');
-        if (userProfile !== null) {
-          const { image } = JSON.parse(userProfile);
 
-          setStorageImage(image);
-        }
-      } catch (error) {
-        console.error('Error loading user profile:', error);
-      }
-    };
 
-    loadUserProfile();
-  }, [selectedScreen]);
 
   return (
     <View style={{
@@ -153,16 +226,16 @@ const HomeScreen = () => {
                     marginLeft: category === 'Markets' ? dimensions.width * 0.028 : 0,
                   }}
                   onPress={() => {
-                    setSelectedEvent(`${category}`);
+                    setSelectedEventCategory(`${category}`);
                   }}
                 >
                   <Text
                     style={{
                       fontFamily: fontSfProTextRegular,
                       fontSize: dimensions.width * 0.043,
-                      color: selectedEvent === category ? '#DD0326' : '#999999',
+                      color: selectedEventCategory === category ? '#DD0326' : '#999999',
                       paddingTop: dimensions.width * 0.04,
-                      textDecorationLine: selectedEvent === category ? 'underline' : 'none',
+                      textDecorationLine: selectedEventCategory === category ? 'underline' : 'none',
                       textDecorationStyle: 'solid',
                       fontWeight: 400
                     }}
@@ -183,113 +256,118 @@ const HomeScreen = () => {
           >
             <View style={{ marginBottom: dimensions.height * 0.25, width: '100%', }}>
 
-              {/* {data.map((item, index) => ( */}
-              <TouchableOpacity
-                // key={index}
-                onPress={() => {
-                  // setSelectedEvent(item); 
-                  setSelectedScreen('EventDetails')
-                }}
-                style={{
-                  alignSelf: 'center',
-                  width: dimensions.width * 0.95,
-                  marginBottom: dimensions.height * 0.01,
-                  zIndex: 500
-                }}
-              >
-
-
-                <Image
-                  source={require('../assets/images/eventImage.png')}
-                  style={{
-                    width: dimensions.width * 0.97,
-                    height: dimensions.height * 0.23,
-                    alignSelf: 'center',
-                    textAlign: 'center',
-                    borderRadius: dimensions.width * 0.055,
+              {data.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    setSelectedEvent(item); 
+                    setSelectedScreen('EventDetails')
                   }}
-                  resizeMode="stretch"
-                />
-                <View style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: dimensions.width * 0.97,
-                }}>
-                  <Text
+                  style={{
+                    alignSelf: 'center',
+                    width: dimensions.width * 0.95,
+                    marginBottom: dimensions.height * 0.01,
+                    zIndex: 500
+                  }}
+                >
+
+
+                  <Image
+                    source={item.image}
                     style={{
-                      fontFamily: fontSfProTextRegular,
-                      fontSize: dimensions.width * 0.043,
-                      color: 'white',
-                      padding: dimensions.width * 0.021,
-                      fontWeight: 600,
+                      width: dimensions.width * 0.97,
+                      height: dimensions.height * 0.23,
+                      alignSelf: 'center',
+                      textAlign: 'center',
+                      borderRadius: dimensions.width * 0.055,
                     }}
-                  >
-                    Copenhagen Ecological Market
-                  </Text>
-
-                  <TouchableOpacity onPress={() => savePlace(item)} style={{ zIndex: 1000, }}>
-
-                    <Image
-                      source={require('../assets/icons/blueHeartIcon.png')}
+                    resizeMode="stretch"
+                  />
+                  <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    width: dimensions.width * 0.97,
+                  }}>
+                    <Text
                       style={{
-                        width: dimensions.height * 0.08,
-                        height: dimensions.width * 0.08,
-                        textAlign: 'center',
+                        fontFamily: fontSfProTextRegular,
+                        fontSize: dimensions.width * 0.043,
+                        color: 'white',
+                        padding: dimensions.width * 0.021,
+                        fontWeight: 600,
+                        maxWidth: dimensions.width * 0.8,
                       }}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View style={{
-                  flexDirection: 'row',
-                  alignSelf: 'flex-start',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  paddingTop: 0,
-                  paddingHorizontal: dimensions.width * 0.021,
-                }}>
+                    >
+                      {item.title}
+                    </Text>
 
-                  <Text
-                    style={{
-                      fontFamily: 'SFPro-Medium',
-                      fontSize: dimensions.width * 0.037,
-                      color: '#999999',
-                      opacity: 0.7,
-                      fontWeight: 500
-                    }}
-                  >
-                    May 15, 2025
-                  </Text>
+                    <TouchableOpacity onPress={() => saveFavourite(item)} style={{ zIndex: 1000, }}>
 
-                  <Text
-                    style={{
-                      fontFamily: 'SFPro-Medium',
-                      fontSize: dimensions.width * 0.037,
-                      color: '#999999',
-                      opacity: 0.7,
-                      paddingHorizontal: dimensions.width * 0.016,
-                      fontWeight: 500
-                    }}
-                  >
-                    •
-                  </Text>
+                      <Image
+                        source={isThisFavourite(item)
+                          ? require('../assets/icons/fullBlueHeartIcon.png')
+                          : require('../assets/icons/blueHeartIcon.png')}
+                        style={{
+                          width: dimensions.height * 0.064,
+                          height: dimensions.width * 0.064,
+                          marginTop: dimensions.height * 0.01,
+                          textAlign: 'center',
+                          alignItems: 'center',
+                        }}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{
+                    flexDirection: 'row',
+                    alignSelf: 'flex-start',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingTop: 0,
+                    paddingHorizontal: dimensions.width * 0.021,
+                  }}>
+
+                    <Text
+                      style={{
+                        fontFamily: 'SFPro-Medium',
+                        fontSize: dimensions.width * 0.037,
+                        color: '#999999',
+                        opacity: 0.7,
+                        fontWeight: 500
+                      }}
+                    >
+                      {item.date}
+                    </Text>
+
+                    <Text
+                      style={{
+                        fontFamily: 'SFPro-Medium',
+                        fontSize: dimensions.width * 0.037,
+                        color: '#999999',
+                        opacity: 0.7,
+                        paddingHorizontal: dimensions.width * 0.016,
+                        fontWeight: 500
+                      }}
+                    >
+                      •
+                    </Text>
 
 
-                  <Text
-                    style={{
-                      fontFamily: 'SFPro-Medium',
-                      fontSize: dimensions.width * 0.037,
-                      color: '#999999',
-                      opacity: 0.7,
-                      fontWeight: 500
-                    }}
-                  >
-                    10:00 AM
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              {/* ))} */}
+                    <Text
+                      style={{
+                        fontFamily: 'SFPro-Medium',
+                        fontSize: dimensions.width * 0.037,
+                        color: '#999999',
+                        opacity: 0.7,
+                        fontWeight: 500
+                      }}
+                    >
+                      {item.time}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
             </View>
           </ScrollView>
 
@@ -303,18 +381,20 @@ const HomeScreen = () => {
 
 
         </View>
-      ) : selectedScreen === 'Profile' ? (
-        <ProfileScreen setSelectedScreen={setSelectedScreen} />
+      ) : selectedScreen === 'Settings' ? (
+        <SettingsScreen setSelectedScreen={setSelectedScreen} isNotificationEnabled={isNotificationEnabled} setNotificationEnabled={setNotificationEnabled} allData={allData}
+          favorites={favorites} setFavorites={setFavorites}
+        />
       ) : selectedScreen === 'Map' ? (
         <MapScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedStar={selectedStar} setSelectedStar={setSelectedStar} />
       ) : selectedScreen === 'StarDetails' ? (
         <StarDetailsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedStar={selectedStar} setSelectedStar={setSelectedStar} />
-      ) : selectedScreen === 'Favourites' ? (
-        <FavouritesScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'HoroscopeDetails' ? (
         <HoroscopeDetailsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedZodiac={selectedZodiac} setSelectedZodiac={setSelectedZodiac} />
       ) : selectedScreen === 'EventDetails' ? (
-        <EventDetailsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedZodiac={selectedZodiac} setSelectedZodiac={setSelectedZodiac} />
+        <EventDetailsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} favorites={favorites} setFavorites={setFavorites}
+          selectedEvent={selectedEvent} setSelectedEvent={setSelectedEvent}
+        />
       ) : selectedScreen === 'Calendar' ? (
         <CalendarScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedZodiac={selectedZodiac} setSelectedZodiac={setSelectedZodiac} />
       ) : selectedScreen === 'Picnics' ? (

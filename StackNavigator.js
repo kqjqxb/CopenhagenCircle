@@ -13,7 +13,6 @@ import { Provider, useDispatch } from 'react-redux';
 import store from './src/redux/store';
 import { loadUserData } from './src/redux/userSlice';
 import { AudioProvider, useAudio } from './src/context/AudioContext';
-import NewChecklistScreen from './src/screens/NewChecklistScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -89,7 +88,6 @@ const AppNavigator = () => {
         <Stack.Navigator initialRouteName={isOnboardWasVisible ? 'OnboardingScreen' : 'Home'}>
           <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="NewChecklist" component={NewChecklistScreen} options={{ headerShown: false,  presentation: 'fullScreenModal'}} />
         </Stack.Navigator>
       </AudioProvider>
     </NavigationContainer>

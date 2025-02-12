@@ -18,37 +18,54 @@ const fontRobotoBold = 'Roboto-Bold';
 const fontRobotoReg = 'Roboto-Regular';
 const fontSfProTextRegular = 'SFProText-Regular';
 
-const EventDetailsScreen = ({ setSelectedScreenPage, setSelectedScreen, selectedPlace, savedPolandPlaces, setSavedPolandPlaces, selectedCategory, setSelectedCategory }) => {
+const EventDetailsScreen = ({  setSelectedScreen, selectedScreen, selectedPlace, selectedEvent }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-    const [isTextClosed, setIsTextClosed] = useState(true);
+    const [favorites, setFavorites] = useState([]);
+    useEffect(() => {
+        const fetchStorageFavourites = async () => {
+          try {
+            const saved = await AsyncStorage.getItem('favorites');
+            setFavorites(saved ? JSON.parse(saved) : []);
+          } catch (error) {
+            console.error('Помилка  favorites:', error);
+          }
+        };
+    
+        fetchStorageFavourites();
+    
+      }, [selectedScreen,]);
 
-
-
-    const savePlace = async (place) => {
+    const saveFavourite = async (favourite) => {
         try {
-            const savedPlace = await AsyncStorage.getItem('savedPolandPlaces');
-            const parsedTheesePlaces = savedPlace ? JSON.parse(savedPlace) : [];
+            const savedFav = await AsyncStorage.getItem('favorites');
+            const parsedFav = savedFav ? JSON.parse(savedFav) : [];
 
-            const thisPlaceIndex = parsedTheesePlaces.findIndex((loc) => loc.id === place.id);
+            const favIndex = parsedFav.findIndex((fav) => fav.id === favourite.id);
 
-            if (thisPlaceIndex === -1) {
-                const updatedPlacesList = [place, ...parsedTheesePlaces];
-                await AsyncStorage.setItem('savedPolandPlaces', JSON.stringify(updatedPlacesList));
-                setSavedPolandPlaces(updatedPlacesList);
-                console.log('place was saved');
+            if (favIndex === -1) {
+                const updatedFavs = [favourite, ...parsedFav];
+                await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavs));
+                setFavorites(updatedFavs);
+                console.log('favourite збережена');
             } else {
-                const updatedPlacesList = parsedTheesePlaces.filter((loc) => loc.id !== place.id);
-                await AsyncStorage.setItem('savedPolandPlaces', JSON.stringify(updatedPlacesList));
-                setSavedPolandPlaces(updatedPlacesList);
-                console.log('place was deleted');
+                const updatedFavs = parsedFav.filter((fav) => fav.id !== favourite.id);
+                await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavs));
+                setFavorites(updatedFavs);
+                console.log('favourite видалена');
             }
         } catch (error) {
-            console.error('error of save/delete Poland place:', error);
+            console.error('Помилка збереження/видалення локації:', error);
         }
     };
-    const isPlaceSaved = (location) => {
-        return savedPolandPlaces.some((loc) => loc.id === location.id);
+
+    const isThisFavourite = (favourite) => {
+        return favorites.some((fav) => fav.id === favourite.id);
     };
+
+    useEffect(() => {
+        console.log('favorites:', favorites);
+        console.log('selectedPlace:', selectedPlace);
+    }, [selectedScreen])
 
     return (
         <SafeAreaView style={{
@@ -109,7 +126,7 @@ const EventDetailsScreen = ({ setSelectedScreenPage, setSelectedScreen, selected
                 </Text>
 
 
-                <TouchableOpacity onPress={() => savePlace(selectedPlace)} style={{ zIndex: 1000, }}>
+                {/* <TouchableOpacity onPress={() => saveFavourite(selectedPlace)} style={{ zIndex: 1000, }}>
 
                     <Image
                         source={require('../assets/icons/blueHeartIcon.png')}
@@ -121,7 +138,36 @@ const EventDetailsScreen = ({ setSelectedScreenPage, setSelectedScreen, selected
                         }}
                         resizeMode="contain"
                     />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+
+
+                <TouchableOpacity onPress={() => saveFavourite(selectedEvent)} style={{ zIndex: 1000, }}>
+
+                    <Image
+                        source={isThisFavourite(selectedEvent)
+                            ? require('../assets/icons/fullBlueHeartIcon.png')
+                            : require('../assets/icons/blueHeartIcon.png')}
+                        style={{
+                            width: dimensions.height * 0.064,
+                            height: dimensions.width * 0.064,
+                            marginTop: dimensions.height * 0.01,
+                            textAlign: 'center',
+                            alignItems: 'center',
+                        }}
+                        resizeMode="contain"
+                    />
+                    {/* <Image
+                        source={require('../assets/icons/blueHeartIcon.png')}
+                        style={{
+                            width: dimensions.height * 0.064,
+                            height: dimensions.width * 0.064,
+                            marginTop: dimensions.height * 0.01,
+                            textAlign: 'center',
+                            alignItems: 'center',
+                        }}
+                        resizeMode="contain"
+                    />*/}
+                </TouchableOpacity> 
             </View>
 
             <View style={{
@@ -130,10 +176,10 @@ const EventDetailsScreen = ({ setSelectedScreenPage, setSelectedScreen, selected
                 marginTop: dimensions.height * 0.02,
             }}>
                 <Image
-                    source={require('../assets/images/eventImage.png')}
+                    source={selectedEvent.image}
                     style={{
                         width: dimensions.width * 0.97,
-                        height: dimensions.height * 0.3,
+                        height: dimensions.height * 0.25,
                         textAlign: 'center',
                         borderRadius: dimensions.width * 0.046,
                     }}
@@ -157,7 +203,7 @@ const EventDetailsScreen = ({ setSelectedScreenPage, setSelectedScreen, selected
                             fontWeight: 500
                         }}
                     >
-                        May 15, 2025
+                        {selectedEvent.date}
                     </Text>
 
 
@@ -170,7 +216,7 @@ const EventDetailsScreen = ({ setSelectedScreenPage, setSelectedScreen, selected
                             fontWeight: 500
                         }}
                     >
-                        10:00 AM
+                        {selectedEvent.time}
                     </Text>
 
                 </View>
@@ -184,7 +230,7 @@ const EventDetailsScreen = ({ setSelectedScreenPage, setSelectedScreen, selected
                         marginTop: dimensions.height * 0.01,
                     }}
                 >
-                    Copenhagen Ecological Market
+                    {selectedEvent.title}
                 </Text>
 
 
@@ -197,7 +243,7 @@ const EventDetailsScreen = ({ setSelectedScreenPage, setSelectedScreen, selected
                         fontWeight: 400,
                     }}
                 >
-                    This market brings together local producers and eco-friendly suppliers, offering a wide range of organic products, handmade goods, and sustainable solutions. Visitors can enjoy fresh fruits, vegetables, bread, and local delicacies, as well as participate in workshops on ecology and sustainable living. The festive atmosphere is enhanced by live music and activities for children.  
+                    {selectedEvent.description}
                 </Text>
 
             </View>
