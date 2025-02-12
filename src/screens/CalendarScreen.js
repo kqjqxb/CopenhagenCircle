@@ -322,6 +322,7 @@ const CalendarScreen = ({ }) => {
                         flexDirection: 'row',
                         alignItems: 'center',
                         width: '100%',
+                        alignSelf: 'flex-start',
                       }}>
                         <Text
                           style={{
@@ -330,7 +331,7 @@ const CalendarScreen = ({ }) => {
                             color: 'white',
                             padding: dimensions.width * 0.007,
                             fontWeight: 700,
-                            maxWidth: dimensions.width * 0.64,
+                            maxWidth: dimensions.width * 0.46,
                           }}
                           numberOfLines={1}
                           ellipsizeMode="tail"
