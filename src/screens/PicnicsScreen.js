@@ -610,8 +610,8 @@ const PicnicsScreen = ({ setSelectedScreen, selectedScreen, }) => {
                     }}>
                         <TouchableOpacity
                             onPress={() => {
-                                // setModalVisible(false);
-                                // setSelectedPicnicPlace(null);
+                                setModalVisible(false);
+                                setSelectedPicnicPlace(null);
                             }}
                             style={{
                                 borderRadius: dimensions.width * 0.5,
