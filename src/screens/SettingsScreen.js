@@ -265,7 +265,7 @@ const SettingsScreen = ({ selectedScreen, isNotificationEnabled, setNotification
 
                     <Switch
                         trackColor={{ false: '#948ea0', true: '#0875E6' }}
-                        thumbColor={isNotificationEnabled ? '#FFFFFF' : '#FFFFFF'}
+                        thumbColor={'#FFFFFF'}
                         ios_backgroundColor="#3E3E3E"
                         onValueChange={toggleNotificationSwitch}
                         value={isNotificationEnabled}
